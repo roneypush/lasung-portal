@@ -10,20 +10,19 @@
   <p id="msg">최신 링크를 불러오는 중입니다.</p>
 
   <script>
-    async function go(){
-      try{
-        const res = await fetch('./current.json?ts=' + Date.now(), {cache:'no-store'});
-        const data = await res.json();
-        if(!data.url) throw new Error('url 없음');
-
-        const target = data.url.replace(/\/+$/,'') + '/driver';
-        location.replace(target);
-      }catch(e){
-        document.getElementById('msg').textContent =
-          '연결 실패: 잠시 후 다시 시도하거나 관리자에게 문의하세요.';
-      }
+fetch('current.json?ts=' + Date.now(), { cache: 'no-store' })
+  .then(res => res.json())
+  .then(data => {
+    if(data.url){
+      location.href = data.url + '/driver';
+    } else {
+      document.body.innerHTML = '서버 주소 없음';
     }
-    go();
-  </script>
+  })
+  .catch(() => {
+    document.body.innerHTML = '서버 연결 대기중';
+  });
+</script>
+
 </body>
 </html>
