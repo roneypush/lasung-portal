@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>라성마트 기사 포털</title>
+</head>
+<body style="font-family:system-ui; padding:18px;">
+  <h3>기사 페이지 연결중…</h3>
+  <p id="msg">최신 링크를 불러오는 중입니다.</p>
+
+  <script>
+    async function go(){
+      try{
+        const res = await fetch('./current.json?ts=' + Date.now(), {cache:'no-store'});
+        const data = await res.json();
+        if(!data.url) throw new Error('url 없음');
+
+        const target = data.url.replace(/\/+$/,'') + '/driver';
+        location.replace(target);
+      }catch(e){
+        document.getElementById('msg').textContent =
+          '연결 실패: 잠시 후 다시 시도하거나 관리자에게 문의하세요.';
+      }
+    }
+    go();
+  </script>
+</body>
+</html>
